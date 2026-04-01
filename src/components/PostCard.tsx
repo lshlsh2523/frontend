@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { Post } from "@/types/post";
 
 interface PostCardProps {
@@ -7,13 +8,15 @@ interface PostCardProps {
 }
 
 export default function PostCard({ post }: PostCardProps) {
-  // TODO: 게시글 카드 UI를 구현하세요
-  // - 제목, 작성자, 작성일, 좋아요 수, 댓글 수 표시
-  // - 카드 클릭 시 /community/[id]로 이동 (useRouter 사용)
+  const router = useRouter();
+
   return (
-    <div>
+    <div onClick={() => router.push(`/community/${post.id}`)}>
       <h2>{post.title}</h2>
-      {/* 나머지를 구현하세요 */}
+      <p>작성자: {post.author}</p>
+      <p>작성일: {new Date(post.createdAt).toLocaleString()}</p>
+      <p>좋아요: {post.likes}</p>
+      <p>댓글: {post.comments.length}</p>
     </div>
   );
 }
