@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
 import CommentItem from "@/components/CommentItem";
-import { fetchPost } from "@/lib/api";
+import { fetchPost, toggleLike } from "@/lib/api";
 import type { PostDetail } from "@/types/post";
 
 export default function PostDetailPage() {
@@ -15,6 +15,7 @@ export default function PostDetailPage() {
   const [post, setPost] = useState<PostDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isLiking, setIsLiking] = useState(false);
 
   useEffect(() => {
     const loadPost = async () => {
@@ -36,6 +37,21 @@ export default function PostDetailPage() {
       void loadPost();
     }
   }, [id]);
+
+  const handleLike = async () => {
+    if (!post || isLiking) return;
+
+    try {
+      setIsLiking(true);
+
+      const updatedPost = await toggleLike(post.id);
+      setPost(updatedPost);
+    } catch {
+      alert("좋아요 처리에 실패했습니다.");
+    } finally {
+      setIsLiking(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -109,7 +125,17 @@ export default function PostDetailPage() {
               </div>
             </div>
 
-            <div className="mt-8 text-sm text-gray-600">좋아요 {post.likes}</div>
+            <div className="mt-8 flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => void handleLike()}
+                disabled={isLiking}
+                className="rounded-md bg-blue-500 px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:bg-blue-300"
+              >
+                {isLiking ? "처리 중..." : "좋아요"}
+              </button>
+              <span className="text-sm text-gray-600">{post.likes}</span>
+            </div>
           </div>
 
           <div className="border-t border-gray-200 bg-gray-50/50 px-6 py-6 sm:px-8">
