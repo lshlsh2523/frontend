@@ -28,6 +28,11 @@ export default function PostDetailPage() {
   const [commentContent, setCommentContent] = useState("");
   const [isCommenting, setIsCommenting] = useState(false);
   const [deletingCommentId, setDeletingCommentId] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<
+    | { kind: "post"; id: string }
+    | { kind: "comment"; id: string }
+    | null
+  >(null);
 
   useEffect(() => {
     const loadPost = async () => {
@@ -65,21 +70,9 @@ export default function PostDetailPage() {
     }
   };
 
-  const handleDelete = async () => {
-    if (!post || isDeleting) return;
-
-    const ok = confirm("정말 삭제하시겠습니까?");
-    if (!ok) return;
-
-    try {
-      setIsDeleting(true);
-      await deletePost(post.id);
-      router.push("/community");
-    } catch {
-      alert("게시글 삭제에 실패했습니다.");
-    } finally {
-      setIsDeleting(false);
-    }
+  const handleDelete = () => {
+    if (!post || isDeleting || confirmDelete) return;
+    setConfirmDelete({ kind: "post", id: post.id });
   };
 
   const canSubmitComment =
@@ -155,19 +148,42 @@ export default function PostDetailPage() {
     }
   };
 
-  const handleDeleteComment = async (commentId: string) => {
+  const handleDeleteComment = (commentId: string) => {
     if (!post) return;
     if (deletingCommentId === commentId) return;
+    if (confirmDelete) return;
 
+    setConfirmDelete({ kind: "comment", id: commentId });
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!confirmDelete) return;
+
+    const target = confirmDelete;
+    setConfirmDelete(null);
+
+    if (target.kind === "post") {
+      try {
+        setIsDeleting(true);
+        await deletePost(target.id);
+        router.push("/community");
+      } catch {
+        alert("게시글 삭제에 실패했습니다.");
+      } finally {
+        setIsDeleting(false);
+      }
+      return;
+    }
+
+    // comment
     try {
-      setDeletingCommentId(commentId);
-      await deleteComment(commentId);
-
+      setDeletingCommentId(target.id);
+      await deleteComment(target.id);
       setPost((prev) => {
         if (!prev) return prev;
         return {
           ...prev,
-          comments: prev.comments.filter((c) => c.id !== commentId),
+          comments: prev.comments.filter((c) => c.id !== target.id),
         };
       });
     } catch {
@@ -329,6 +345,35 @@ export default function PostDetailPage() {
           </div>
         </article>
       </div>
+
+      {confirmDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="w-full max-w-[420px] rounded-lg bg-white p-5 shadow-lg">
+            <p className="text-sm text-gray-900">
+              {confirmDelete.kind === "post"
+                ? "게시글을 삭제하시겠습니까?"
+                : "댓글을 삭제하시겠습니까?"}
+            </p>
+            <div className="mt-4 flex items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setConfirmDelete(null)}
+                className="rounded-md border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              >
+                취소
+              </button>
+              <button
+                type="button"
+                onClick={() => void handleConfirmDelete()}
+                disabled={isDeleting || deletingCommentId !== null}
+                className="rounded-md bg-red-600 px-3 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:bg-red-300"
+              >
+                확인
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

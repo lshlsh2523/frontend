@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -44,13 +45,21 @@ export default function CommunityPage() {
                 최신 게시글을 확인하고 자유롭게 소통해보세요.
               </p>
             </div>
-            <button
-              type="button"
-              onClick={() => router.push("/community/write")}
-              className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white"
-            >
-              글 작성
-            </button>
+            <div className="flex items-center gap-2">
+              <Link
+                href="/"
+                className="rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              >
+                홈으로
+              </Link>
+              <button
+                type="button"
+                onClick={() => router.push("/community/write")}
+                className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white"
+              >
+                글 작성
+              </button>
+            </div>
           </div>
 
           <div className="px-6 py-6 sm:px-8 sm:py-8">

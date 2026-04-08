@@ -29,11 +29,7 @@ export default function CommentItem({
 
         <button
           type="button"
-          onClick={() => {
-            const ok = confirm("댓글을 삭제하시겠습니까?");
-            if (!ok) return;
-            onDelete(comment.id);
-          }}
+          onClick={() => onDelete(comment.id)}
           disabled={isDeleting}
           className="ml-auto inline-flex items-center rounded-md px-2 py-1 text-xs font-medium text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:text-gray-400"
         >
