@@ -197,7 +197,7 @@ export default function PostDetailPage() {
     return (
       <div className="min-h-screen bg-[#f5f7fa] px-4 py-12">
         <div className="mx-auto max-w-[760px]">
-          <div className="rounded-lg border border-gray-200 bg-white p-8 text-center text-gray-600 shadow-sm">
+          <div className="rounded-2xl border border-gray-200 bg-white p-8 text-center text-gray-600 shadow-sm">
             로딩 중...
           </div>
         </div>
@@ -209,13 +209,13 @@ export default function PostDetailPage() {
     return (
       <div className="min-h-screen bg-[#f5f7fa] px-4 py-12">
         <div className="mx-auto max-w-[760px]">
-          <div className="rounded-lg border border-red-200 bg-white p-8 text-center shadow-sm">
+          <div className="rounded-2xl border border-red-200 bg-white p-8 text-center shadow-sm">
             <p className="text-sm text-red-600">
               {error ?? "존재하지 않는 게시글입니다."}
             </p>
             <Link
               href="/community"
-              className="mt-4 inline-flex text-sm font-medium text-blue-600 hover:text-blue-700"
+              className="mt-4 inline-flex text-sm font-semibold text-blue-600 hover:text-blue-700 transition"
             >
               ← 목록으로
             </Link>
@@ -236,22 +236,22 @@ export default function PostDetailPage() {
   return (
     <div className="min-h-screen bg-[#f5f7fa] px-4 py-10 sm:py-12">
       <div className="mx-auto w-full max-w-[760px]">
-        <article className="overflow-hidden rounded-lg bg-white shadow-sm">
-          <div className="border-b border-gray-100 px-6 py-6 sm:px-8">
+        <article className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-100">
+          <div className="border-b border-gray-100 bg-gradient-to-r from-blue-50/50 to-white px-6 py-6 sm:px-8">
             <Link
               href="/community"
-              className="text-sm font-medium text-gray-600 hover:text-gray-900"
+              className="text-sm font-semibold text-gray-600 hover:text-gray-900 transition"
             >
               ← 목록으로
             </Link>
           </div>
 
           <div className="px-6 py-8 sm:px-8 sm:py-10">
-            <h1 className="text-xl font-bold leading-snug text-gray-900 sm:text-2xl">
+            <h1 className="text-2xl font-bold leading-tight text-gray-900 sm:text-3xl">
               {post.title}
             </h1>
 
-            <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-500">
+            <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-500">
               <span>{post.author}</span>
               <span className="text-gray-300" aria-hidden>
                 ·
@@ -259,40 +259,42 @@ export default function PostDetailPage() {
               <time dateTime={post.createdAt}>{formattedDate}</time>
             </div>
 
-            <div className="mt-8 border-t border-gray-100 pt-8">
-              <div className="whitespace-pre-wrap text-base leading-relaxed text-gray-800">
+            <div className="mt-6 border-t border-gray-100 pt-6">
+              <div className="whitespace-pre-wrap text-base leading-8 text-gray-800">
                 {post.content}
               </div>
             </div>
 
-            <div className="mt-8 flex items-center gap-3">
+            <div className="mt-6 flex flex-wrap items-center gap-3">
               <button
                 type="button"
                 onClick={() => void handleLike()}
                 disabled={isLiking}
-                className="rounded-md bg-blue-500 px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:bg-blue-300"
+                className="rounded-full bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
               >
                 {isLiking ? "처리 중..." : "좋아요"}
               </button>
-              <span className="text-sm text-gray-600">{post.likes}</span>
+              <span className="rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-700">
+                {post.likes}
+              </span>
 
               <button
                 type="button"
                 onClick={() => void handleDelete()}
                 disabled={isDeleting}
-                className="ml-auto rounded-md border border-red-200 bg-white px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400"
+                className="ml-auto rounded-full border border-red-200 bg-white px-5 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400"
               >
                 {isDeleting ? "삭제 중..." : "삭제"}
               </button>
             </div>
           </div>
 
-          <div className="border-t border-gray-200 bg-gray-50/50 px-6 py-6 sm:px-8">
-            <h2 className="text-base font-semibold text-gray-900">댓글</h2>
+          <div className="border-t border-gray-100 bg-gray-50/60 px-6 py-6 sm:px-8">
+            <h2 className="text-base font-bold text-gray-900">댓글</h2>
 
             <form
               onSubmit={(e) => void handleCreateComment(e)}
-              className="mt-4 rounded-md border border-gray-200 bg-white p-4"
+              className="mt-4 rounded-xl border border-gray-200 bg-white p-4 shadow-sm"
             >
               <div className="flex flex-col gap-3 sm:flex-row">
                 <label className="flex-1">
@@ -302,13 +304,13 @@ export default function PostDetailPage() {
                     onChange={(e) => setCommentAuthor(e.target.value)}
                     placeholder="작성자"
                     disabled={isCommenting}
-                    className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm outline-none focus:border-blue-300 disabled:bg-gray-100"
+                    className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:bg-gray-100"
                   />
                 </label>
                 <button
                   type="submit"
                   disabled={!canSubmitComment}
-                  className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:bg-gray-300"
+                  className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
                 >
                   {isCommenting ? "작성 중..." : "댓글 작성"}
                 </button>
@@ -321,7 +323,7 @@ export default function PostDetailPage() {
                   placeholder="댓글을 입력하세요"
                   disabled={isCommenting}
                   rows={3}
-                  className="w-full resize-none rounded-md border border-gray-200 px-3 py-2 text-sm outline-none focus:border-blue-300 disabled:bg-gray-100"
+                  className="w-full resize-none rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:bg-gray-100"
                 />
               </label>
             </form>
@@ -330,7 +332,7 @@ export default function PostDetailPage() {
               {post.comments.length === 0 ? (
                 <p className="py-4 text-sm text-gray-500">아직 댓글이 없습니다.</p>
               ) : (
-                <ul className="list-none divide-y divide-gray-200 rounded-md border border-gray-100 bg-white p-0">
+                <ul className="list-none space-y-2 rounded-xl bg-white p-3 ring-1 ring-gray-100">
                   {post.comments.map((comment) => (
                     <CommentItem
                       key={comment.id}
@@ -348,7 +350,7 @@ export default function PostDetailPage() {
 
       {confirmDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-          <div className="w-full max-w-[420px] rounded-lg bg-white p-5 shadow-lg">
+          <div className="w-full max-w-[420px] rounded-xl border border-gray-100 bg-white p-5 shadow-xl">
             <p className="text-sm text-gray-900">
               {confirmDelete.kind === "post"
                 ? "게시글을 삭제하시겠습니까?"
@@ -358,7 +360,7 @@ export default function PostDetailPage() {
               <button
                 type="button"
                 onClick={() => setConfirmDelete(null)}
-                className="rounded-md border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                className="rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
               >
                 취소
               </button>
@@ -366,7 +368,7 @@ export default function PostDetailPage() {
                 type="button"
                 onClick={() => void handleConfirmDelete()}
                 disabled={isDeleting || deletingCommentId !== null}
-                className="rounded-md bg-red-600 px-3 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:bg-red-300"
+                className="rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:bg-red-300"
               >
                 확인
               </button>
