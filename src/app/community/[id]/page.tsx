@@ -2,20 +2,22 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import CommentItem from "@/components/CommentItem";
-import { fetchPost, toggleLike } from "@/lib/api";
+import { deletePost, fetchPost, toggleLike } from "@/lib/api";
 import type { PostDetail } from "@/types/post";
 
 export default function PostDetailPage() {
   const params = useParams();
   const id = params.id as string;
+  const router = useRouter();
 
   const [post, setPost] = useState<PostDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isLiking, setIsLiking] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const loadPost = async () => {
@@ -50,6 +52,23 @@ export default function PostDetailPage() {
       alert("좋아요 처리에 실패했습니다.");
     } finally {
       setIsLiking(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!post || isDeleting) return;
+
+    const ok = confirm("정말 삭제하시겠습니까?");
+    if (!ok) return;
+
+    try {
+      setIsDeleting(true);
+      await deletePost(post.id);
+      router.push("/community");
+    } catch {
+      alert("게시글 삭제에 실패했습니다.");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -135,6 +154,15 @@ export default function PostDetailPage() {
                 {isLiking ? "처리 중..." : "좋아요"}
               </button>
               <span className="text-sm text-gray-600">{post.likes}</span>
+
+              <button
+                type="button"
+                onClick={() => void handleDelete()}
+                disabled={isDeleting}
+                className="ml-auto rounded-md border border-red-200 bg-white px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400"
+              >
+                {isDeleting ? "삭제 중..." : "삭제"}
+              </button>
             </div>
           </div>
 
