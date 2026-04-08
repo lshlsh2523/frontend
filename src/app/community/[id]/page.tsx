@@ -58,6 +58,11 @@ export default function PostDetailPage() {
   }, [id]);
 
   const handleLike = async () => {
+    if (!isLoggedIn) {
+      alert("로그인 후 좋아요를 누를 수 있습니다.");
+      return;
+    }
+
     if (!post || isLiking) return;
 
     try {
@@ -231,7 +236,7 @@ export default function PostDetailPage() {
               <button
                 type="button"
                 onClick={() => void handleLike()}
-                disabled={isLiking}
+                disabled={!isLoggedIn || isLiking}
                 className="rounded-full bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
               >
                 {isLiking ? "처리 중..." : "좋아요"}
